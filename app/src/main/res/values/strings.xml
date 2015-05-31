@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">TodoListApp</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="addNewBtn">Add New</string>
+    <string name="deleteBtn">Delete</string>
+    <string name="doneBtn">Done</string>
+    <string name="undoneBtn">Undone</string>
+</resources>
