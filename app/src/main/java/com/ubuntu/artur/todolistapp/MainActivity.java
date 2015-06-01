@@ -3,21 +3,43 @@ package com.ubuntu.artur.todolistapp;
 import android.app.Activity;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ToggleButton;
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements View.OnClickListener, TextWatcher {
+    private Button addNewBtn;
+    private Button deleteBtn;
+    private Button doneBtn;
+    private Button undoneBtn;
+    private LinearLayout todoItemsLayout;
+    private ListView todoListView;
+    private EditText todoTextEdit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //Button addNewBtn = (Button)findViewById(R.id.addNewBtn);
-        //LinearLayout todoItemsLayout = (LinearLayout)findViewById(R.id.controlsLayout);
+
+        addNewBtn = (Button)findViewById(R.id.addNewBtn);
+        deleteBtn = (Button)findViewById(R.id.deleteBtn);
+        doneBtn = (Button)findViewById(R.id.doneBtn);
+        undoneBtn = (Button)findViewById(R.id.undoneBtn);
+
+        todoItemsLayout = (LinearLayout)findViewById(R.id.controlsLayout);
+
+        todoListView = (ListView)findViewById(R.id.todoListView);
+
+        todoTextEdit = (EditText)findViewById(R.id.todoTextEdit);
+        //todoListView.addFooterView();
     }
 
     @Override
@@ -42,7 +64,23 @@ public class MainActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    private ToggleButton createTodoItem() {
-        return null;
+    @Override
+    public void onClick(View sender) {
+        int id = sender.getId();
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence string, int start, int count, int after) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence string, int start, int before, int count) {
+
+    }
+
+    @Override
+    public void afterTextChanged(Editable editor) {
+
     }
 }

@@ -7,4 +7,5 @@
     <string name="deleteBtn">Delete</string>
     <string name="doneBtn">Done</string>
     <string name="undoneBtn">Undone</string>
+    <string name="TodoTextHint">Enter TODO</string>
 </resources>
