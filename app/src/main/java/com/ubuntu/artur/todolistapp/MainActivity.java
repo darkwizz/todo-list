@@ -12,6 +12,8 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CheckedTextView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -22,7 +24,7 @@ import com.ubuntu.artur.todolistapp.todomodule.TodoModule;
 
 
 public class MainActivity extends Activity implements View.OnClickListener, TextWatcher,
-        AdapterView.OnItemClickListener, View.OnFocusChangeListener {
+        AdapterView.OnItemClickListener, View.OnFocusChangeListener, AdapterView.OnItemSelectedListener {
     private ArrayAdapter<TodoItem> adapter;
     private Button addNewBtn;
     private Button deleteBtn;
@@ -32,6 +34,7 @@ public class MainActivity extends Activity implements View.OnClickListener, Text
     private ListView todoListView;
     private EditText todoTextEdit;
     private TodoModule module;
+    private int lastSelectedTodoPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +66,13 @@ public class MainActivity extends Activity implements View.OnClickListener, Text
         adapter = new ArrayAdapter<TodoItem>(this, android.R.layout.simple_list_item_multiple_choice);
         // Test todoItems
         //TodoItem[] items = { new TodoItem("Finish Android app"), new TodoItem("Finish 2nd lab") };
+
+        /* TODO
+           fillListView() method - when TodoModule will have DB interaction, then there
+           will be reading from DB by module.getTodoItems() calling
+        */
+        //fillListView();
+
         adapter.addAll(module.getTodoItems());
         //adapter.addAll(items);
 
@@ -70,6 +80,7 @@ public class MainActivity extends Activity implements View.OnClickListener, Text
         todoListView.setAdapter(adapter);
         todoListView.setOnItemClickListener(this);
         todoListView.setOnFocusChangeListener(this);
+        todoListView.setOnItemSelectedListener(this);
     }
 
     @Override
@@ -131,14 +142,19 @@ public class MainActivity extends Activity implements View.OnClickListener, Text
     }
 
     private void onDeleteTodoItem() {
+        TodoItem item = adapter.getItem(lastSelectedTodoPosition);
+        module.onTodoItemDeleted(item.getId());
+        adapter.remove(item);
+        adapter.notifyDataSetChanged();
+        deleteBtn.setEnabled(false);
     }
 
     private void onAcceptAdding() {
         String todoText = todoTextEdit.getText().toString();
         TodoItem item = new TodoItem(todoText);
+        module.onTodoItemAdded(item.getId(), item);
         adapter.add(item);
         adapter.notifyDataSetChanged();
-        module.onTodoItemAdded(item.getId(), item);
         offNewTodoEnterControls();
     }
 
@@ -154,10 +170,11 @@ public class MainActivity extends Activity implements View.OnClickListener, Text
     }
 
     // END of Clicks handlers
-    ///////////////////////////
+    //////////////////////////
 
-    @Override
-    public void beforeTextChanged(CharSequence string, int start, int count, int after) { }
+
+    //////////////////////////
+    // TextEdit events handlers
 
     @Override
     public void onTextChanged(CharSequence string, int start, int before, int count) {
@@ -165,12 +182,27 @@ public class MainActivity extends Activity implements View.OnClickListener, Text
         okBtn.setEnabled(hasSomeText);
     }
 
+    // Stubs
+
+    @Override
+    public void beforeTextChanged(CharSequence string, int start, int count, int after) { }
+
     @Override
     public void afterTextChanged(Editable editor) { }
 
+    // END of TextEdit event section
+    //////////////////////////
+
+
+    //////////////////////////
+    // TodoListView events handlers
+
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+        CheckedTextView textView = (CheckedTextView)view;
+        TodoItem item = adapter.getItem(position);
+        item.setDoneState(textView.isChecked());
+        module.onTodoItemStateChanged(item.getId(), textView.isChecked());
     }
 
     @Override
@@ -180,4 +212,17 @@ public class MainActivity extends Activity implements View.OnClickListener, Text
             deleteBtn.setEnabled(hasFocus);
         }
     }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        lastSelectedTodoPosition = position;
+        deleteBtn.setEnabled(todoListView.hasFocus());
+    }
+
+    // Stub
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) { }
+
+    // END of TodoListView section
+    //////////////////////////
 }
