@@ -2,6 +2,7 @@ package com.ubuntu.artur.todolistapp.todomodule;
 
 import com.ubuntu.artur.todolistapp.entities.TodoItem;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -36,7 +37,7 @@ public class TodoModule {
         return true;
     }
 
-    public Iterable<TodoItem> getTodoItems() {
+    public Collection<TodoItem> getTodoItems() {
         return todoList.values();
     }
 }
