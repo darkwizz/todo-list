@@ -1,6 +1,7 @@
 package com.ubuntu.artur.todolistapp;
 
 import android.app.Activity;
+import android.content.Context;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -8,6 +9,8 @@ import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -17,6 +20,7 @@ import android.widget.CheckedTextView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.ubuntu.artur.todolistapp.entities.TodoItem;
@@ -24,7 +28,7 @@ import com.ubuntu.artur.todolistapp.todomodule.TodoModule;
 
 
 public class MainActivity extends Activity implements View.OnClickListener, TextWatcher,
-        AdapterView.OnItemClickListener, View.OnFocusChangeListener, AdapterView.OnItemSelectedListener {
+        AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
     private ArrayAdapter<TodoItem> adapter;
     private Button addNewBtn;
     private Button deleteBtn;
@@ -43,7 +47,6 @@ public class MainActivity extends Activity implements View.OnClickListener, Text
 
         addNewBtn = (Button)findViewById(R.id.addNewBtn);
         addNewBtn.setOnClickListener(this);
-        addNewBtn.setFocusableInTouchMode(true);
 
         deleteBtn = (Button)findViewById(R.id.deleteBtn);
         deleteBtn.setOnClickListener(this);
@@ -60,6 +63,8 @@ public class MainActivity extends Activity implements View.OnClickListener, Text
         // todoItemsLayout = (LinearLayout)findViewById(R.id.controlsLayout);
         todoTextEdit = (EditText)findViewById(R.id.todoTextEdit);
         todoTextEdit.addTextChangedListener(this);
+        //InputMethodManager manager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        //manager.hideSoftInputFromWindow(todoTextEdit.getWindowToken(), 0);
         todoTextEdit.setEnabled(false);
 
         module = new TodoModule();
@@ -79,8 +84,11 @@ public class MainActivity extends Activity implements View.OnClickListener, Text
         todoListView = (ListView)findViewById(R.id.todoListView);
         todoListView.setAdapter(adapter);
         todoListView.setOnItemClickListener(this);
-        todoListView.setOnFocusChangeListener(this);
-        todoListView.setOnItemSelectedListener(this);
+        //todoListView.setOnFocusChangeListener(this);
+        //todoListView.setOnItemSelectedListener(this);
+        todoListView.setOnItemLongClickListener(this);
+
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
 
     @Override
@@ -139,6 +147,8 @@ public class MainActivity extends Activity implements View.OnClickListener, Text
         cancelBtn.setEnabled(true);
         todoTextEdit.setEnabled(true);
         todoTextEdit.requestFocus();
+        InputMethodManager manager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        manager.showSoftInput(todoTextEdit, InputMethodManager.SHOW_IMPLICIT);
     }
 
     private void onDeleteTodoItem() {
@@ -206,22 +216,14 @@ public class MainActivity extends Activity implements View.OnClickListener, Text
     }
 
     @Override
-    public void onFocusChange(View view, boolean hasFocus) {
-        int id = view.getId();
-        if (id == R.id.todoListView) {
-            deleteBtn.setEnabled(hasFocus);
-        }
-    }
-
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         lastSelectedTodoPosition = position;
-        deleteBtn.setEnabled(todoListView.hasFocus());
+        CheckedTextView textView = (CheckedTextView)view;
+        onItemClick(parent, textView, position, id);
+        textView.setSelected(true);
+        deleteBtn.setEnabled(true);
+        return false;
     }
-
-    // Stub
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) { }
 
     // END of TodoListView section
     //////////////////////////

@@ -13,7 +13,7 @@
         android:id="@+id/controlsLayout"
         android:weightSum="1"
     android:orientation="vertical">
-        <LinearLayout
+        <RelativeLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -26,7 +26,10 @@
                 android:text="@string/addNewBtn"
                 android:id="@+id/addNewBtn"
                 android:layout_gravity="left"
-                android:textSize="26sp" />
+                android:textSize="26sp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
 
             <Button
                 style="?android:attr/buttonStyleSmall"
@@ -35,11 +38,15 @@
                 android:text="@string/deleteBtn"
                 android:id="@+id/deleteBtn"
                 android:layout_gravity="right"
-                android:textSize="26sp" />
+                android:textSize="26sp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignBottom="@+id/addNewBtn" />
 
-        </LinearLayout>
+        </RelativeLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -50,7 +57,10 @@
             android:id="@+id/todoTextEdit"
             android:inputType="text"
             android:hint="@string/TodoTextHint"
-            android:layout_gravity="left" />
+            android:layout_gravity="left"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
 
         <Button
             style="?android:attr/buttonStyleSmall"
@@ -58,15 +68,27 @@
             android:layout_height="wrap_content"
             android:text="@string/okBtn"
             android:id="@+id/okBtn"
-            android:layout_gravity="right" />
+            android:layout_gravity="right"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/cancelBtn"
+            android:layout_toStartOf="@+id/cancelBtn" />
 
         <Button
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/cancelBtn"
-            android:id="@+id/cancelBtn" />
-    </LinearLayout>
+            android:id="@+id/cancelBtn"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/textViewHint"
+        android:id="@+id/hintTextView" />
 
     <ListView
         android:layout_width="match_parent"
